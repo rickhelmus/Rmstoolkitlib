@@ -12,6 +12,7 @@ pkgconfig <- function(opt = c("PKG_CFLAGS", "PKG_CXXFLAGS", "PKG_LIBS"))
         else
             ""
 
-        cat(sprintf("%s%s/libmstoolkit.a", system.file("libs", package = "Rlibmstoolkit"), arch))
+        cat(sprintf("%s%s/lib%s.a", system.file("libs", package = "Rlibmstoolkit"), arch,
+            c("mstlite", "mzimltools", "mzparser", "expat")), "-lz")
     }
 }

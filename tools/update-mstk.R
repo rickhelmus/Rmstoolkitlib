@@ -8,3 +8,5 @@ exdir <- file.path(srcdir, "mstoolkit")
 unlink(exdir, recursive = TRUE)
 unzip(outf, exdir = srcdir)
 file.rename(file.path(srcdir, "mstoolkit-master"), file.path(srcdir, "mstoolkit"))
+
+stopifnot(system2("patch", c(file.path(exdir, "Makefile"), file.path("tools", "Makefile.patch"))) == 0)

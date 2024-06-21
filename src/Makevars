@@ -8,12 +8,12 @@ MSTK_CFLAGS=-fPIC -I. -I./include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DG
 all: mstk inst
 
 mstk:
-	$(MAKE) -C mstoolkit C="${CC}" CC="${CC}" CFLAGS="${MSTK_CFLAGS}" expat zlib mstoolkit mzparser lib
+	$(MAKE) -C mstoolkit C="${CC}" CC="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" expat mstoolkit mzparser mzimltools
 
 inst:
 	mkdir -p "${INCDEST}" "${LIBDEST}"
 	cp -R mstoolkit/include/* "${INCDEST}/"
-	cp mstoolkit/libmstoolkitlite.a "${LIBDEST}/libmstoolkit.a"
+	cp mstoolkit/obj/libexpat.a mstoolkit/obj/libmstlite.a mstoolkit/obj/libmzimltools.a mstoolkit/obj/libmzparser.a "${LIBDEST}/"
 
 clean:
 	$(MAKE) -C mstoolkit realclean
