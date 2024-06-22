@@ -8,6 +8,7 @@ MSTK_CFLAGS=-fPIC -I. -I./include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DG
 all: mstk inst
 
 mstk:
+	$(MAKE) -C mstoolkit CC="${CC}" CXX="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" expat
 	$(MAKE) -C mstoolkit C="${CC}" CC="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" expat mstoolkit mzparser mzimltools
 
 inst:
