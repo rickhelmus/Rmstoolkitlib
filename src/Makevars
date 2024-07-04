@@ -5,11 +5,14 @@ INCDEST=${R_PACKAGE_DIR}/include
 LIBDEST=${R_PACKAGE_DIR}/libs${R_ARCH}
 MSTK_CFLAGS=-fPIC -I. -I./include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DGCC -DHAVE_EXPAT_CONFIG_H
 
-all: mstk inst
+all: expat mstk inst
 
-mstk:
-	$(MAKE) -C mstoolkit CC="${CC}" CXX="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" expat
-	$(MAKE) -C mstoolkit C="${CC}" CC="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" expat mstoolkit mzparser mzimltools
+# HACK: expat is build separately, as it needs CC/CXX set instead of C/CC and seems to error with -j set to >1
+expat:
+	$(MAKE) -C mstoolkit CC="${CC}" CXX="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" -j1 expat
+
+mstk: expat
+	$(MAKE) -C mstoolkit C="${CC}" CC="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" mstoolkit mzparser mzimltools
 
 inst:
 	mkdir -p "${INCDEST}" "${LIBDEST}"
