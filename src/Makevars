@@ -14,7 +14,7 @@ expat:
 mstk: expat
 	$(MAKE) -C mstoolkit C="${CC}" CC="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" mstoolkit mzparser mzimltools
 
-inst:
+inst: mstk
 	mkdir -p "${INCDEST}" "${LIBDEST}"
 	cp -R mstoolkit/include/* "${INCDEST}/"
 	cp mstoolkit/obj/libexpat.a mstoolkit/obj/libmstlite.a mstoolkit/obj/libmzimltools.a mstoolkit/obj/libmzparser.a "${LIBDEST}/"
