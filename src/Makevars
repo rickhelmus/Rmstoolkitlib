@@ -12,12 +12,12 @@ expat:
 	$(MAKE) -C mstoolkit CC="${CC}" CXX="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" -j1 expat
 
 mstk: expat
-	$(MAKE) -C mstoolkit C="${CC}" CC="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" mstoolkit mzparser mzimltools
+	$(MAKE) -C mstoolkit C="${CC}" CC="${CXX14} -std=c++14" CFLAGS="${MSTK_CFLAGS}" mstoolkit mzparser
 
 inst: mstk
 	mkdir -p "${INCDEST}" "${LIBDEST}"
 	cp -R mstoolkit/include/* "${INCDEST}/"
-	cp mstoolkit/obj/libexpat.a mstoolkit/obj/libmstlite.a mstoolkit/obj/libmzimltools.a mstoolkit/obj/libmzparser.a "${LIBDEST}/"
+	cp mstoolkit/obj/libexpat.a mstoolkit/obj/libmst.a mstoolkit/obj/libmzparser.a "${LIBDEST}/"
 
 clean:
 	$(MAKE) -C mstoolkit realclean
