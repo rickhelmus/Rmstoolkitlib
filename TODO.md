@@ -1,3 +1,2 @@
 - document somewhere that compilation fails if there are paths with spaces. Workaround: set TMPDIR with eg withr before calling devtools::install()
 - setup r-universe so we have compiled packages, esp for previous point and Windows users
-- do we need zlibbioc? It only seems to cause issues while linking, both for Windows and Linux
