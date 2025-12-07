@@ -1,4 +1,9 @@
-# this function (mechanism) was based on zlibbioc (https://github.com/Bioconductor/zlibbioc)
+#' Obtain compilation flags for `Rmstoolkitlib`
+#' @param opt A character string specifying which compilation flags to return.
+#'   Must be one of `"PKG_CFLAGS"`, `"PKG_CXXFLAGS"`, or `"PKG_LIBS"`.
+#' @return A character string containing the requested compilation flags.
+#' @source This function (mechanism) was based on zlibbioc (https://github.com/Bioconductor/zlibbioc)
+#' @export
 pkgconfig <- function(opt = c("PKG_CFLAGS", "PKG_CXXFLAGS", "PKG_LIBS"))
 {
     opt <- match.arg(opt)

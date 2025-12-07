@@ -1,3 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^TODO.md$
+^.*\.o$
+^.*\.obj$

@@ -11,3 +11,10 @@ file.rename(file.path(srcdir, "mstoolkit-timsfix"), file.path(srcdir, "mstoolkit
 
 # generated with: diff -u --label original src/mstoolkit/Makefile --label modified tools/Makefile > tools/Makefile.patch
 stopifnot(system2("patch", c(file.path(exdir, "Makefile"), file.path("tools", "Makefile.patch"))) == 0)
+
+# rm some unnecessary files
+unlink(file.path(exdir, c(
+    ".github", "CMakeLists.txt", "MAKEFILE.nmake", "MSSingleScanSrc", "mstoolkit.mri", "mstoolkitlite.mri",
+    "VisualStudio"
+)), recursive = TRUE)
+

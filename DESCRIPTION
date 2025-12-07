@@ -1,11 +1,19 @@
 Package: Rmstoolkitlib
 Type: Package
-Title: Wrapper Package for For mstoolkit
-Version: 0.1.0
-Author: Rick Helmus
-Maintainer: Rick Helmus <r.helmus@uva.nl>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: GPLv3
+Title: Wrapper Package for For MSToolkit
+Version: 1.0.0
+Authors@R: c(
+    person("Rick", "Helmus",
+           email = "r.helmus@uva.nl",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-9401-3133")
+    ))
+Description: A simple wrapper package that exposes MSToolkit (https://github.com/mhoopmann/mstoolkit).
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/rickhelmus/Rmstoolkitlib
+BugReports: https://github.com/rickhelmus/Rmstoolkitlib/issues
+SystemRequirements: GNU make
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
