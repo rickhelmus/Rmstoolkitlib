@@ -1,16 +1,22 @@
 Rmstoolkitlib
 ==============
 
+[![Rmstoolkitlib r-universe](https://rickhelmus.r-universe.dev/badges/Rmstoolkitlib)](https://rickhelmus.r-universe.dev/Rmstoolkitlib)
+
 Rmstoolkitlib provides an R interface to the [MSToolkit](https://github.com/mhoopmann/mstoolkit) library for reading raw mass spectrometry data.
 
-## Installation
+## Installation (R universe)
+
+```r
+install.packages('Rmstoolkitlib', repos = c('https://rickhelmus.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+## Installation (from source)
 
 ```r
 # Install the package from the source repository
 remotes::install_github("rickhelmus/Rmstoolkitlib")
 ```
-
-## Compilation errors
 
 If you face errors during installation it may be due to temporary installation paths with spaces in them (especially common on Windows). As a workaround, you can tempoerarily change the `TMPDIR` environment variable during package installation. For instance:
 
