@@ -21,7 +21,12 @@ remotes::install_github("rickhelmus/Rmstoolkitlib")
 If you face errors during installation it may be due to temporary installation paths with spaces in them (especially common on Windows). As a workaround, you can tempoerarily change the `TMPDIR` environment variable during package installation. For instance:
 
 ```r
-withr::local_envvar(list(TMPDIR = "C:/Rtmpdir"), remotes::install_github("rickhelmus/Rmstoolkitlib"))
+tmpBuildDir <- "C:/Rtmp"
+oldTmpDir <- Sys.getenv("TMPDIR")
+dir.create(tmpBuildDir, showWarnings = FALSE)
+Sys.setenv(TMPDIR = tmpBuildDir)
+remotes::install_github("rickhelmus/Rmstoolkitlib")
+Sys.setenv(TMPDIR = oldTmpDir) # Reset TMPDIR to its original value
 ```
 
 ## Original project
