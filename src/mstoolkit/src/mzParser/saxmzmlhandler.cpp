@@ -18,7 +18,7 @@
  * 3/11/2005 (Brendan MacLean): Use eXpat SAX parser, and create SAXSpectraHandler
  *
  * November 2005
- * Fredrik Levander 
+ * Fredrik Levander
  * A few changes to handle MzData 1.05.
  *
  * Updated to handle version 1.04 and 1.05. (Rob Craig)
@@ -34,6 +34,7 @@
  *******************************************************/
 
 #include "mzParser.h"
+#include <stdexcept>
 using namespace std;
 using namespace mzParser;
 
@@ -318,7 +319,7 @@ void mzpSAXMzmlHandler::endElement(const XML_Char *el) {
   } else if(isElement("index",el)){
     m_bSpectrumIndex=false;
     m_bChromatogramIndex=false;
-    
+
 
   } else if(isElement("indexList",el)){
     m_bInIndexList=false;
@@ -356,7 +357,7 @@ void mzpSAXMzmlHandler::endElement(const XML_Char *el) {
 
   } else if (isElement("product", el)){
     m_bInProduct=false;
-    
+
   } else if(isElement("referenceableParamGroup", el)) {
     m_bInRefGroup = false;
 
@@ -368,7 +369,7 @@ void mzpSAXMzmlHandler::endElement(const XML_Char *el) {
     if (m_vState.back() != esSpectrum) {
       cout << "Error: expected state should be spectrum." << endl;
     } else m_vState.pop_back();
-    
+
   } else if(isElement("spectrumList",el)) {
     m_bInSpectrumList = false;
 
@@ -394,7 +395,7 @@ void mzpSAXMzmlHandler::processCVParam(const char* name, const char* accession, 
 
   } else if(!strcmp(name, "base peak m/z") || !strcmp(accession,"MS:1000504"))  {
     spec->setBasePeakMZ(atof(value));
-    
+
   } else if (!strcmp(name, "beam-type collision-induced dissociation") || !strcmp(accession, "MS:1000422")) {
     if(m_vState.back()==esPrecursor) m_precursorIon.activation=HCD;
     spec->setActivation(HCD);
@@ -446,7 +447,7 @@ void mzpSAXMzmlHandler::processCVParam(const char* name, const char* accession, 
 
   } else if(!strcmp(name, "FAIMS compensation voltage") || !strcmp(accession,"MS:1001581"))  {
     spec->setCompensationVoltage(atof(value));
-    
+
   } else if(!strcmp(name, "filter string") || !strcmp(accession,"MS:1000512"))  {
     char str[128];
     strncpy(str,value,127);
@@ -566,11 +567,11 @@ void mzpSAXMzmlHandler::processCVParam(const char* name, const char* accession, 
   } else if(!strcmp(name, "scan window lower limit") || !strcmp(accession,"MS:1000501"))    {
     //TODO: should we also check the units???
     spec->setLowMZ(atof(value));
-    
+
   } else if(!strcmp(name, "scan window upper limit") || !strcmp(accession,"MS:1000500"))    {
     //TODO: should we also check the units???
     spec->setHighMZ(atof(value));
-    
+
   } else if(!strcmp(name, "selected ion m/z") || !strcmp(accession,"MS:1000744"))  {
     //MH: Note the change here. From now on, selected ion m/z always goes in the m_precursorIon.mz variable.
     //Isolation mz (different cvParam) always goes in m_precursionIon.isoMZ, and the thermo trailer (userParam) goes in m_precursorIon.monoMZ.
@@ -618,7 +619,7 @@ void mzpSAXMzmlHandler::processData(){
     }
 
     m_peaksCount = (int)m_hdfArraySz;
-    
+
     if(m_bLowPrecision) {
       float* tmp = new float[m_hdfArraySz];
       if(m_bInintenArrayBinary) {
@@ -682,7 +683,7 @@ bool mzpSAXMzmlHandler::readChromatogram(int num){
   //if no scan was requested, grab the next one
   if(num<0) posChromatIndex++;
   else posChromatIndex=num;
-  
+
   if(posChromatIndex>=(int)m_vChromatIndex.size()) return false;
   parseOffset(m_vChromatIndex[posChromatIndex].offset);
   return true;
@@ -738,7 +739,7 @@ bool mzpSAXMzmlHandler::readHeader(int num){
 bool mzpSAXMzmlHandler::readHeaderFromOffset(f_off offset, int scNm){
   spec->clear();
   m_scanNumOverride=scNm;
-  
+
   //index must be positive.
   if (offset<0) return false;
 
@@ -816,7 +817,7 @@ bool mzpSAXMzmlHandler::readSpectrumFromOffset(f_off offset, int scNm){
 #ifdef MZP_HDF
   if(m_hdfFile>-1) parseHDFOffset((int)offset);
   else parseOffset(offset);
-#else 
+#else
   parseOffset(offset);
 #endif
   return true;
@@ -864,13 +865,13 @@ void mzpSAXMzmlHandler::decode(vector<double>& d){
   //For byte order correction
   union udata32 {
     float d;
-    uint32_t i;  
-  } uData32; 
+    uint32_t i;
+  } uData32;
 
   union udata64 {
     double d;
-    uint64_t i;  
-  } uData64; 
+    uint64_t i;
+  } uData64;
 
   const char* pData = m_strData.data();
   size_t stringSize = m_strData.size();
@@ -894,8 +895,7 @@ void mzpSAXMzmlHandler::decode(vector<double>& d){
       unzippedLen = m_peaksCount*sizeof(uint64_t);
     } else {
       if(!m_bNumpressLinear && !m_bNumpressSlof && !m_bNumpressPic){
-        cout << "Unknown data format to unzip. Stopping file read." << endl;
-        exit(EXIT_FAILURE);
+        throw std::runtime_error("Unknown data format to unzip. Stopping file read.");
       }
     //don't know the unzipped size of numpressed data, so assume it to be no larger than unpressed 64-bit data
     unzippedLen = m_peaksCount*sizeof(uint64_t);
@@ -910,7 +910,7 @@ void mzpSAXMzmlHandler::decode(vector<double>& d){
   //Numpress decompression
   if(m_bNumpressLinear || m_bNumpressSlof || m_bNumpressPic){
     double* unpressed=new double[m_peaksCount];
-  
+
     try{
         if(m_bNumpressLinear){
           if(m_bZlib) ms::numpress::MSNumpress::decodeLinear((unsigned char*)unzipped,(const size_t)unzippedLen,unpressed);
@@ -923,8 +923,7 @@ void mzpSAXMzmlHandler::decode(vector<double>& d){
           else ms::numpress::MSNumpress::decodePic((unsigned char*)decoded,decodeLen,unpressed);
         }
     } catch (const char* ch){
-      cout << "Exception: " << ch << endl;
-      exit(EXIT_FAILURE);
+      throw std::runtime_error(std::string("Exception: ") + ch);
     }
 
     if(m_bZlib) delete [] unzipped;
@@ -1177,7 +1176,7 @@ void mzpSAXMzmlHandler::readHDFIndex(){
 
   hsize_t offCount,size,maxdims;
   H5Sget_simple_extent_dims(space, &offCount, &maxdims);
- 
+
   int64_t* offset = new int64_t[offCount];
   hid_t status = H5Dread(data, H5T_NATIVE_INT64, H5S_ALL, H5S_ALL, H5P_DEFAULT, offset);
   H5Sclose(space);
@@ -1234,8 +1233,7 @@ bool mzpSAXMzmlHandler::generateIndexOffset() {
     char *pStr;
 
     if (f==NULL){
-      cout << "Error cannot open file " << m_strFileName[0] << endl;
-      exit(EXIT_FAILURE);
+      throw std::runtime_error(std::string("Error cannot open file ") + m_strFileName);
     }
 
     bool bReadingFirstSpectrum = true;
